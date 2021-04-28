@@ -1,0 +1,25 @@
+---
+
+- name: install package(s)
+  apt:
+    name: "{{ ntp_packages }}"
+    state: present
+    force: yes
+    install_recommends: no
+    update_cache: yes
+
+- name: Configure
+  template:
+    src: ntp.conf.j2
+    dest: /etc/ntp.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+  - restart ntp
+
+- name: start service(s)
+  service:
+    name: ntp
+    enabled: true
+    state: started
